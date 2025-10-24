@@ -1,43 +1,51 @@
-# Definición de todos los servicios (contenedores)
+# docker-compose.yml (Place this in your Kore_Completo root folder)
 services:
 
   # 1. Servicio de la Base de Datos (PostgreSQL)
   db:
-    image: postgres:18
-    container_name: skillup_db
+    image: postgres:18 # O la versión que prefieras (ej. postgres:16)
+    container_name: Skillup_db
+    restart: always
     environment:
-      - POSTGEORES_USER=postgres
-      - POSTGRES_PASSWORD=Tics2030
-      - POSTGRES_DB=skillup_db
+      POSTGRES_USER:postgres
+      POSTGRES_PASSWORD:Tics2030 
+      POSTGRES_DB:skillup_db
     ports:
-      - "5432:5432"
+      - "5432:5432" # Puerto para DBeaver/pgAdmin
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data # Persistencia de datos
+      - ./db-init:/docker-entrypoint-initdb.d # Ejecuta el script SQL al inicio
 
-  # 2. Servicio del Backend (Java/Spring Boot)
+  # 2. Servicio del Backend (Spring Boot - Construido con Multi-Stage)
   backend:
     build:
-      # ⬇️ USA LA RUTA ABSOLUTA A TU BACKEND AQUÍ ⬇️
-      context: .\Skillup-backend\demo
-    container_name: skillup_backend
+      context: ./Skillup-backend # Ruta a la carpeta de tu backend
+      dockerfile: Dockerfile # Nombre del Dockerfile a usar
+    container_name: Skillup_backend
+    restart: on-failure
     depends_on:
-      - db
+      - db # Espera a que la BD esté lista
     ports:
-      - "8080:8080"
+      - "8080:8080" # Puerto de Spring Boot
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/skillup_db
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=Tics2030
+      # Conexión a la BD (usa los nombres de servicio y variables de .env)
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/skillup_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Tics2030
+      # Hibernate DDL Auto (Crea/Actualiza tablas automáticamente)
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update # O 'validate', 'none'
+      JWT_SECRET: skillup_secret_key_super_largo_para_desarrollo_local_2025_123456789
 
-  # 3. Servicio del Frontend (HTML, CSS, JS estáticos)
+  # 3. Servicio del Frontend (Nginx - Sirve archivos estáticos)
   frontend:
     build:
-      # ⬇️ USA LA RUTA ABSOLUTA A TU FRONTEND AQUÍ ⬇️
-      context: .\Skillup
-    container_name: skillup_frontend
+      context: ./Skillup # Ruta a la carpeta de tu frontend
+      dockerfile: Dockerfile
+    container_name: Skillup_frontend
+    restart: always
     ports:
-      - "3000:80"
+      - "3000:80" # Accede en localhost:3000
 
-# Docker gestionará este volumen para guardar los datos de la BD
+# Define el volumen nombrado para la persistencia de datos de PostgreSQL
 volumes:
   postgres_data:
