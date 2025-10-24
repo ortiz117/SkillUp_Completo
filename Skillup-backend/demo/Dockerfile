@@ -1,28 +1,36 @@
 # ----- ETAPA 1: Construcción (Build) -----
-# Usamos una imagen de Maven con Java 21 para construir el proyecto
+# Usa una imagen de Maven con Java 21 para compilar el proyecto.
 FROM maven:3.9-eclipse-temurin-21 AS builder
 
-# Establecemos el directorio de trabajo
+# Establece el directorio de trabajo dentro del contenedor.
 WORKDIR /app
 
-# Copiamos primero el pom.xml para aprovechar el caché de Docker
+# Copia primero el pom.xml para aprovechar el caché de Docker.
+# Solo volverá a descargar dependencias si el pom.xml cambia.
 COPY pom.xml .
+RUN mvn dependency:go-offline
 
-# Copiamos el código fuente
+# Copia el resto del código fuente.
 COPY src ./src
 
-# Ejecutamos el comando de Maven para construir el .jar (sin tests)
+# Ejecuta el comando de Maven para construir el .jar ejecutable.
+# -DskipTests se salta las pruebas para acelerar la construcción.
 RUN mvn package -DskipTests
 
 
 # ----- ETAPA 2: Ejecución (Run) -----
-# Usamos la imagen ligera de Java 21 que ya tenías
+# Usa una imagen de Java 21 optimizada y ligera (sin Maven).
 FROM openjdk:21-slim
 
+# Establece el directorio de trabajo.
 WORKDIR /app
 
-# Copiamos SOLAMENTE el .jar de la etapa anterior (builder)
+# Copia SOLAMENTE el archivo .jar generado en la etapa anterior.
+# Esto hace que la imagen final sea mucho más pequeña.
 COPY --from=builder /app/target/*.jar app.jar
 
+# Expone el puerto en el que corre la aplicación Spring Boot.
 EXPOSE 8080
+
+# Comando que se ejecutará cuando el contenedor arranque.
 ENTRYPOINT ["java", "-jar", "app.jar"]
