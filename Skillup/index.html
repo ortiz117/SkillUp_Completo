@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillUp - Certificación y Tutorías</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">🎓 SkillUp</div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#" onclick="showSection('home')">Inicio</a></li>
+                <li><a href="#" onclick="showSection('certifications')">Certificaciones</a></li>
+                <li><a href="#" onclick="showSection('tutors')">Tutores</a></li>
+                <li><a href="#" onclick="showSection('sessions')">Mis Sesiones</a></li>
+            </ul>
+            <div class="user-menu">
+                <div id="authButtons">
+                    <button class="btn btn-outline" onclick="showModal('loginModal')">Iniciar Sesión</button>
+                    <button class="btn btn-primary" onclick="showModal('registerModal')">Registrarse</button>
+                </div>
+                <div id="userInfo" class="hidden">
+                    <span id="userName"></span>
+                    <button class="btn btn-outline" onclick="logout()">Cerrar Sesión</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <div class="hero">
+        <div class="container">
+            <h1>Certifica tus Habilidades y Conecta con Tutores</h1>
+            <p>Plataforma integral para certificar competencias académicas y recibir asesorías personalizadas</p>
+            <button class="btn btn-secondary" onclick="showSection('certifications')">Explorar Certificaciones</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <h2>Bienvenido a SkillUp</h2>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <h4>Certificaciones Disponibles</h4>
+                    <div class="value">24</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Tutores Activos</h4>
+                    <div class="value">18</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Sesiones Completadas</h4>
+                    <div class="value">342</div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🎯 Certificaciones</h3>
+                    <p>Valida tus conocimientos en áreas específicas de tu carrera y obtén certificaciones reconocidas.</p>
+                    <button class="btn btn-primary" onclick="showSection('certifications')">Ver Certificaciones</button>
+                </div>
+                <div class="card">
+                    <h3>👨‍🏫 Tutorías</h3>
+                    <p>Conecta con tutores expertos para asesorías personalizadas en línea o presenciales.</p>
+                    <button class="btn btn-primary" onclick="showSection('tutors')">Buscar Tutores</button>
+                </div>
+                <div class="card">
+                    <h3>📊 Seguimiento</h3>
+                    <p>Monitorea tu progreso, certificaciones obtenidas y sesiones de tutoría.</p>
+                    <button class="btn btn-primary" onclick="showSection('sessions')">Ver Progreso</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Certifications Section -->
+        <section id="certifications" class="section">
+            <h2>Certificaciones Disponibles</h2>
+            <p>Selecciona tu carrera para ver las certificaciones disponibles</p>
+
+            <div class="form-group">
+                <label>Filtrar por Carrera:</label>
+                <select id="careerFilter" onchange="filterCertifications()">
+                    <option value="">Todas las Carreras</option>
+                    <option value="tics">Ingeniería en TICs</option>
+                    <option value="industrial">Ingeniería Industrial</option>
+                    <option value="gestion">Gestión Empresarial</option>
+                    <option value="agronomia">Ingeniería en Agronomía</option>
+                </select>
+            </div>
+
+            <div class="grid" id="certificationsGrid"></div>
+        </section>
+
+        <!-- Tutors Section -->
+        <section id="tutors" class="section">
+            <h2>Tutores Disponibles</h2>
+            <p>Encuentra tutores especializados en diferentes materias</p>
+
+            <div class="form-group">
+                <label>Filtrar por Materia:</label>
+                <select id="subjectFilter" onchange="filterTutors()">
+                    <option value="">Todas las Materias</option>
+                    <option value="programacion">Programación</option>
+                    <option value="calculo">Cálculo</option>
+                    <option value="estadistica">Estadística</option>
+                    <option value="contabilidad">Contabilidad</option>
+                    <option value="quimica">Química</option>
+                </select>
+            </div>
+
+            <div class="grid" id="tutorsGrid"></div>
+        </section>
+
+        <!-- Sessions Section -->
+        <section id="sessions" class="section">
+            <h2>Mis Sesiones y Certificaciones</h2>
+            
+            <div class="card">
+                <h3>Certificaciones Obtenidas</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Certificación</th>
+                            <th>Fecha</th>
+                            <th>Calificación</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="certificationsTable">
+                        <tr>
+                            <td colspan="4" style="text-align: center;">No hay certificaciones aún</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>Sesiones de Tutoría</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tutor</th>
+                            <th>Materia</th>
+                            <th>Fecha</th>
+                            <th>Modalidad</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sessionsTable">
+                        <tr>
+                            <td colspan="5" style="text-align: center;">No hay sesiones programadas</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Iniciar Sesión</h3>
+                <button class="close-modal" onclick="closeModal('loginModal')">&times;</button>
+            </div>
+            <form onsubmit="login(event)">
+                <div class="form-group">
+                    <label>Correo Electrónico:</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Iniciar Sesión</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Registrarse</h3>
+                <button class="close-modal" onclick="closeModal('registerModal')">&times;</button>
+            </div>
+            <form onsubmit="register(event)">
+                <div class="form-group">
+                    <label>Nombre Completo:</label>
+                    <input type="text" id="registerName" required>
+                </div>
+                <div class="form-group">
+                    <label>Correo Electrónico:</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña:</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Usuario:</label>
+                    <select id="registerType" required>
+                        <option value="student">Estudiante</option>
+                        <option value="tutor">Tutor</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Carrera:</label>
+                    <select id="registerCareer" required>
+                        <option value="tics">Ingeniería en TICs</option>
+                        <option value="industrial">Ingeniería Industrial</option>
+                        <option value="gestion">Gestión Empresarial</option>
+                        <option value="agronomia">Ingeniería en Agronomía</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Registrarse</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Request Session Modal -->
+    <div id="sessionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Solicitar Asesoría</h3>
+                <button class="close-modal" onclick="closeModal('sessionModal')">&times;</button>
+            </div>
+            <form onsubmit="requestSession(event)">
+                <div id="sessionAlert"></div>
+                <div class="form-group">
+                    <label>Modalidad:</label>
+                    <select id="sessionMode" required>
+                        <option value="online">En Línea</option>
+                        <option value="presencial">Presencial</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Fecha Preferida:</label>
+                    <input type="date" id="sessionDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Hora:</label>
+                    <input type="time" id="sessionTime" required>
+                </div>
+                <div class="form-group">
+                    <label>Descripción del Tema:</label>
+                    <textarea id="sessionDescription" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Solicitar Asesoría</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 SkillUp - Plataforma de Certificación y Tutorías</p>
+            <p>Disponible 24/7 | Seguro | Escalable</p>
+        </div>
+    </footer>
+    <script src="config.js" type="module"></script>
+    <script src="logica.js" defer></script>
+</body>
+</html>

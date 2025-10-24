@@ -1,0 +1,16 @@
+# Archivos de Java / Maven (del backend)
+# Ignora la carpeta 'target' donde se compila el proyecto
+/Skillup_local/Skillup-backend/demo/target/
+/Skillup_local/Skillup-backend/demo/*.jar
+
+# Archivos de Log
+*.log
+
+# Archivos de IDE (IntelliJ, VS Code)
+.idea/
+.vscode/
+*.iml
+
+# Archivos de Sistema Operativo
+.DS_Store
+Thumbs.db
