@@ -1,4 +1,4 @@
-# docker-compose.yml (Place this in your Kore_Completo root folder)
+# docker-compose.yml (Corregido - Colocar en la raíz de Skillup_local)
 services:
 
   # 1. Servicio de la Base de Datos (PostgreSQL)
@@ -7,14 +7,15 @@ services:
     container_name: Skillup_db
     restart: always
     environment:
-      POSTGRES_USER:postgres
-      POSTGRES_PASSWORD:Tics2030 
-      POSTGRES_DB:skillup_db
+
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Tics2030 
+      POSTGRES_DB: skillup_db
     ports:
-      - "5432:5432" # Puerto para DBeaver/pgAdmin
+      - "5432:5432" 
     volumes:
       - postgres_data:/var/lib/postgresql/data # Persistencia de datos
-      - ./dbinit:/docker-entrypoint-initdb.d # Ejecuta el script SQL al inicio
+      - ./db-init:/docker-entrypoint-initdb.d # Ejecuta el script SQL al inicio
 
   # 2. Servicio del Backend (Spring Boot - Construido con Multi-Stage)
   backend:
@@ -28,11 +29,10 @@ services:
     ports:
       - "8080:8080" # Puerto de Spring Boot
     environment:
-      # Conexión a la BD (usa los nombres de servicio y variables de .env)
+      # 👇 CORREGIDO: Espacios añadidos después de ':'
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/skillup_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: Tics2030
-      # Hibernate DDL Auto (Crea/Actualiza tablas automáticamente)
       SPRING_JPA_HIBERNATE_DDL_AUTO: update # O 'validate', 'none'
       JWT_SECRET: skillup_secret_key_super_largo_para_desarrollo_local_2025_123456789
 
