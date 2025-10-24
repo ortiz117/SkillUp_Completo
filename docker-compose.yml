@@ -14,7 +14,7 @@ services:
       - "5432:5432" # Puerto para DBeaver/pgAdmin
     volumes:
       - postgres_data:/var/lib/postgresql/data # Persistencia de datos
-      - ./db-init:/docker-entrypoint-initdb.d # Ejecuta el script SQL al inicio
+      - ./dbinit:/docker-entrypoint-initdb.d # Ejecuta el script SQL al inicio
 
   # 2. Servicio del Backend (Spring Boot - Construido con Multi-Stage)
   backend:
