@@ -1,4 +1,3 @@
-# Usa una imagen oficial de Nginx, súper ligera y optimizada.
 FROM nginx:stable-alpine
 
 # Copia todos tus archivos (HTML, CSS, JS, imágenes, etc.) 
